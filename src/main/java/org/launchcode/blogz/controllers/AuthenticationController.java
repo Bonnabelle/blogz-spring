@@ -18,6 +18,7 @@ public class AuthenticationController extends AbstractController {
 	
 	String[] errors = {"Your username is invalid.", "Your password is invalid.", "Your passwords don't match!"};
 	
+	//Signup
 	
 	@RequestMapping(value = "/signup", method = RequestMethod.GET)
 	public String signupForm() {
@@ -62,6 +63,8 @@ public class AuthenticationController extends AbstractController {
 		}
 	}
 	
+	//Login
+	
 	@RequestMapping(value = "/login", method = RequestMethod.GET)
 	public String loginForm() {
 		return "login";
@@ -70,20 +73,22 @@ public class AuthenticationController extends AbstractController {
 	@RequestMapping(value = "/login", method = RequestMethod.POST)
 	public String login(HttpServletRequest request, Model model) {
 		
-		String sub_pass = request.getParameter("password");
 		String sub_usern = request.getParameter("username");
+		String sub_pass = request.getParameter("password");
+		
+		if(sub_usern == "") {
+			model.addAttribute("error",errors[0]);
+			return "login";
+		} else {
 		
 		User userToFind = userDao.findByUsername(sub_usern);
-		
-		// TODO - implement login
-		
+			
 		if(userToFind.isMatchingPassword(sub_pass) && userToFind.isMatchingPassword(sub_usern)) {
 			
 			HttpSession thisSession = request.getSession();
 			
-			User currentUser = getUserFromSession(thisSession);
+			setUserInSession(thisSession, userToFind);
 			
-			setUserInSession(thisSession, currentUser);
 			
 			return "redirect:/blog";
 			
@@ -97,8 +102,8 @@ public class AuthenticationController extends AbstractController {
 			
 			return "login";
 		}
-		
 	}
+}
 	
 	@RequestMapping(value = "/logout", method = RequestMethod.GET)
 	public String logout(HttpServletRequest request){

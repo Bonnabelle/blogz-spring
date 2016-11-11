@@ -18,7 +18,9 @@ public class BlogController extends AbstractController {
 	public String index(Model model){
 		
 		List<User> user = userDao.findAll();
-		model.addAttribute("user",user);
+		if(user != null){
+			model.addAttribute("user",user);
+		}
 		return "index";
 		
 	}
@@ -28,7 +30,7 @@ public class BlogController extends AbstractController {
 		
 		// TODO - fetch posts and pass to template
 		List<Post> posts = postDao.findAll();
-		model.addAllAttributes(posts);
+		model.addAttribute("posts",posts);
 		return "blog";
 	}
 	

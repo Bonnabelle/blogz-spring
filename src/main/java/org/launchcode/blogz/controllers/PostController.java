@@ -25,7 +25,7 @@ public class PostController extends AbstractController {
 		
 		// TODO - implement newPost
 		
-		return "redirect:index"; // TODO - this redirect should go to the new post's page  		
+		return "redirect:/blog/{uid}"; // TODO - this redirect should go to the new post's page  		
 	}
 	
 	@RequestMapping(value = "/blog/{username}/{uid}", method = RequestMethod.GET)
