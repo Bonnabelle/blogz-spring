@@ -39,6 +39,8 @@ public class PostController extends AbstractController {
 	@RequestMapping(value = "/blog/{username}", method = RequestMethod.GET)
 	public String userPosts(@PathVariable String username, Model model) {
 		
+		//Go look at the last 10 minutes of the prep work video to get the answer to this stuff
+		//Shini tai desu
 		// TODO - implement userPosts
 		
 		return "blog";

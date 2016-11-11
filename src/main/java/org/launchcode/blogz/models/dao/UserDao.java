@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.launchcode.blogz.models.Post;
 import org.launchcode.blogz.models.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -15,6 +16,8 @@ public interface UserDao extends CrudRepository<User, Integer> {
     User findByUid(int uid);
     
     List<User> findAll();
+    
+    Post findPostByUid(int uid);
     
     // TODO - add method signatures as needed
 
