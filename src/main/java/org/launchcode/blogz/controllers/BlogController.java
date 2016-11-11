@@ -2,6 +2,7 @@ package org.launchcode.blogz.controllers;
 
 import java.util.List;
 
+import org.launchcode.blogz.models.Post;
 import org.launchcode.blogz.models.User;
 import org.launchcode.blogz.models.dao.UserDao;
 import org.springframework.stereotype.Controller;
@@ -17,15 +18,17 @@ public class BlogController extends AbstractController {
 	public String index(Model model){
 		
 		List<User> user = userDao.findAll();
-		model.addAttribute("user", user);
+		model.addAttribute("user",user);
 		return "index";
+		
 	}
 	
 	@RequestMapping(value = "/blog")
 	public String blogIndex(Model model) {
 		
 		// TODO - fetch posts and pass to template
-		
+		List<Post> posts = postDao.findAll();
+		model.addAllAttributes(posts);
 		return "blog";
 	}
 	

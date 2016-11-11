@@ -42,7 +42,7 @@ public class AuthenticationController extends AbstractController {
 			
 			setUserInSession(thisSession, user); //Sets user from Session
 		
-			UserDao.save(user, /* An Integer*/);
+			userDao.save(user);
 			return "redirect:blog/newpost";
 		} else {
 			
@@ -73,10 +73,11 @@ public class AuthenticationController extends AbstractController {
 		String sub_pass = request.getParameter("password");
 		String sub_usern = request.getParameter("username");
 		
+		User userToFind = userDao.findByUsername(sub_usern);
+		
 		// TODO - implement login
 		
-		
-		if(User.getUsername() == sub_usern && User.isMatchingPassword(sub_pass)) {
+		if(userToFind.isMatchingPassword(sub_pass) && userToFind.isMatchingPassword(sub_usern)) {
 			
 			HttpSession thisSession = request.getSession();
 			
@@ -84,13 +85,13 @@ public class AuthenticationController extends AbstractController {
 			
 			setUserInSession(thisSession, currentUser);
 			
-			return "redirect:blog/newpost";
+			return "redirect:/blog";
 			
 		} else {
 			
-			if(User.getUsername() != sub_usern) {
+			if(userToFind.getUsername() != sub_usern) {
 				model.addAttribute("error",errors[1]);
-			} else if(!User.isMatchingPassword(sub_pass)) {
+			} else if(!userToFind.isMatchingPassword(sub_pass)) {
 				model.addAttribute("error",errors[2]);
 			} else {}
 			
