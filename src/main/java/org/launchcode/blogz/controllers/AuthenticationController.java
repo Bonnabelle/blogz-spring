@@ -28,7 +28,6 @@ public class AuthenticationController extends AbstractController {
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signup(HttpServletRequest request, Model model) {
 		
-		// TODO - implement signup
 		String sub_pass = request.getParameter("password");
 		String sub_usern = request.getParameter("username");
 		String verify = request.getParameter("verify");

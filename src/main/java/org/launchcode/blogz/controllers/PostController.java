@@ -1,11 +1,12 @@
 package org.launchcode.blogz.controllers;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.launchcode.blogz.models.Post;
 import org.launchcode.blogz.models.User;
+import org.launchcode.blogz.models.dao.PostDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -14,6 +15,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class PostController extends AbstractController {
+	
+	@Autowired
+	PostDao postDao;
+	
+
 
 	@RequestMapping(value = "/blog/newpost", method = RequestMethod.GET)
 	public String newPostForm() {
@@ -23,24 +29,30 @@ public class PostController extends AbstractController {
 	@RequestMapping(value = "/blog/newpost", method = RequestMethod.POST)
 	public String newPost(HttpServletRequest request, Model model) {
 		
-		// TODO - implement newPost
+		String title = request.getParameter("title");
+		String body = request.getParameter("body");
 		
-		return "redirect:/blog/{uid}"; // TODO - this redirect should go to the new post's page  		
+		HttpSession thisSession = request.getSession();
+		User author = getUserFromSession(thisSession);
+		Post newPost = new Post(title,body,author);
+		postDao.save(newPost);
+
+		return "redirect:/blog/{newPost.uid}"; 	
 	}
 	
 	@RequestMapping(value = "/blog/{username}/{uid}", method = RequestMethod.GET)
 	public String singlePost(@PathVariable String username, @PathVariable int uid, Model model) {
 		
-		// TODO - implement singlePost
-		
+		//TODO: finish up posts; the post variable isn't working right
+		Post post = postDao.findByUid(uid);
+		model.addAttribute("post",post);
 		return "post";
 	}
 	
 	@RequestMapping(value = "/blog/{username}", method = RequestMethod.GET)
 	public String userPosts(@PathVariable String username, Model model) {
 		
-		//Go look at the last 10 minutes of the prep work video to get the answer to this stuff
-		//Shini tai desu
+		//YOU GOT THIS <3
 		// TODO - implement userPosts
 		
 		return "blog";
