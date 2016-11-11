@@ -1,12 +1,12 @@
 package org.launchcode.blogz.controllers;
 
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.launchcode.blogz.models.Post;
 import org.launchcode.blogz.models.User;
-import org.launchcode.blogz.models.dao.PostDao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,11 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class PostController extends AbstractController {
-	
-	@Autowired
-	PostDao postDao;
-	
-
 
 	@RequestMapping(value = "/blog/newpost", method = RequestMethod.GET)
 	public String newPostForm() {
@@ -36,25 +31,32 @@ public class PostController extends AbstractController {
 		User author = getUserFromSession(thisSession);
 		Post newPost = new Post(title,body,author);
 		postDao.save(newPost);
+		
+		String username = author.getUsername();
+		int uid = author.getUid();
 
-		return "redirect:/blog/{newPost.uid}"; 	
+		return "redirect:/blog/" + username + "/" + uid; 	
 	}
 	
 	@RequestMapping(value = "/blog/{username}/{uid}", method = RequestMethod.GET)
 	public String singlePost(@PathVariable String username, @PathVariable int uid, Model model) {
 		
-		//TODO: finish up posts; the post variable isn't working right
 		Post post = postDao.findByUid(uid);
+		
+		String title = post.getTitle();
+		String body = post.getBody();
 		model.addAttribute("post",post);
+		model.addAttribute("title",title);
+		model.addAttribute("body",body);
 		return "post";
 	}
 	
 	@RequestMapping(value = "/blog/{username}", method = RequestMethod.GET)
 	public String userPosts(@PathVariable String username, Model model) {
 		
-		//YOU GOT THIS <3
-		// TODO - implement userPosts
-		
+		User user = userDao.findByUsername(username);
+		List<Post> posts = user.getPosts();
+		model.addAttribute("posts",posts);
 		return "blog";
 	}
 	

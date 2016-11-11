@@ -3,9 +3,7 @@ package org.launchcode.blogz.controllers;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.hibernate.Session;
 import org.launchcode.blogz.models.User;
-import org.launchcode.blogz.models.dao.UserDao;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,14 +26,14 @@ public class AuthenticationController extends AbstractController {
 	@RequestMapping(value = "/signup", method = RequestMethod.POST)
 	public String signup(HttpServletRequest request, Model model) {
 		
-		String sub_pass = request.getParameter("password");
 		String sub_usern = request.getParameter("username");
+		String sub_pass = request.getParameter("password");
 		String verify = request.getParameter("verify");
 		
 		
-		boolean error = false;
 
-		if(User.isValidPassword(sub_pass) && User.isValidUsername(sub_usern)) {
+		if(User.isValidPassword(sub_pass) && User.isValidUsername(sub_usern) && verify.equals(sub_pass)) {
+			
 			User user = new User(sub_usern,sub_pass);
 			
 			HttpSession thisSession = request.getSession(); //Gets current session
@@ -44,11 +42,8 @@ public class AuthenticationController extends AbstractController {
 		
 			userDao.save(user);
 			return "redirect:blog/newpost";
+			
 		} else {
-			
-			User user = new User("bleh","fjweifwe");
-			
-			error = true;
 			
 			if(!User.isValidUsername(sub_usern)) {
 				model.addAttribute("username_error",errors[0]);
